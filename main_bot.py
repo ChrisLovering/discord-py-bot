@@ -2,6 +2,7 @@ import os
 import aiohttp
 import discord
 from discord.ext import commands
+from urllib.parse import urlparse
 
 bot = commands.Bot(command_prefix='!')
 
@@ -20,7 +21,7 @@ async def ip(ctx):
         async with session.get('http://localhost:4040/api/tunnels') as r:
             if r.status == 200:
                 js = await r.json()
-                tunnels = [f'{tunnel["public_url"]}'for tunnel in js["tunnels"]]
+                tunnels = [f'{urlparse(tunnel["public_url"]).netloc}'for tunnel in js["tunnels"]]
                 await ctx.send(*tunnels)
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
