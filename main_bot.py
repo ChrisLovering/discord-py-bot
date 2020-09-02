@@ -16,6 +16,7 @@ async def alfred(ctx):
     if ctx.invoked_subcommand is None:
         await ctx.send('Invalid alfred command passed...')
 
+# Gets the current url(s) of the ngrok tunnel
 @alfred.command()
 async def ip(ctx):
     async with aiohttp.ClientSession() as session:
