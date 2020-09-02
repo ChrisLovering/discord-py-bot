@@ -18,10 +18,12 @@ async def alfred(ctx):
 @alfred.command()
 async def ip(ctx):
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://localhost:4040/api/tunnels') as r:
-            if r.status == 200:
+        try:
+            async with session.get('http://localhost:4040/api/tunnels') as r:
                 js = await r.json()
                 tunnels = [f'{urlparse(tunnel["public_url"]).netloc}'for tunnel in js["tunnels"]]
                 await ctx.send(*tunnels)
+        except aiohttp.ClientConnectorError as e:
+            await ctx.send(f'Connection error (This usually means the server isn\'t running): {str(e)}')
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
