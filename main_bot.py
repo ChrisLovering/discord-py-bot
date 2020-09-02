@@ -23,7 +23,7 @@ async def ip(ctx):
         try:
             async with session.get('http://localhost:4040/api/tunnels') as r:
                 js = await r.json()
-                tunnels = [f'{urlparse(tunnel["public_url"]).netloc}'for tunnel in js["tunnels"]]
+                tunnels = [urlparse(tunnel["public_url"]).netloc for tunnel in js["tunnels"]]
                 await ctx.send(*tunnels)
         except aiohttp.ClientConnectorError as e:
             await ctx.send(f'Connection error (This usually means the server isn\'t running): {str(e)}')
