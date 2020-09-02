@@ -20,7 +20,7 @@ async def ip(ctx):
         async with session.get('http://localhost:4040/api/tunnels') as r:
             if r.status == 200:
                 js = await r.json()
-                tunnels = [f'{tunnel["name"]}: {tunnel["public_url"]}'for tunnel in js["tunnels"]]
-                await ctx.send(tunnels)
+                tunnels = [f'{tunnel["public_url"]}'for tunnel in js["tunnels"]]
+                await ctx.send(*tunnels)
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
