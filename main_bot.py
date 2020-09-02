@@ -12,6 +12,7 @@ async def on_ready():
 
 @bot.group()
 async def alfred(ctx):
+    print(f'{ctx.user} sent {ctx.message.content}')
     if ctx.invoked_subcommand is None:
         await ctx.send('Invalid alfred command passed...')
 
