@@ -13,7 +13,7 @@ async def on_ready():
 @bot.group()
 async def alfred(ctx):
     if ctx.invoked_subcommand is None:
-        await ctx.send('Invalid chris command passed...')
+        await ctx.send('Invalid alfred command passed...')
 
 @alfred.command()
 async def ip(ctx):
