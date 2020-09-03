@@ -6,6 +6,16 @@ from urllib.parse import urlparse
 
 bot = commands.Bot(command_prefix="!")
 
+async def get_ngrok_ip():
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get("http://localhost:4040/api/tunnels") as r:
+                js = await r.json()
+                tunnels = [urlparse(tunnel["public_url"]).netloc for tunnel in js["tunnels"]]
+                return *tunnels
+        except aiohttp.ClientConnectorError as e:
+            return f"Connection error. This usually means ngrok isn't running.\n{str(e)}"
+
 @bot.event
 async def on_ready():
     print(f"We have logged in as {bot.user}")
@@ -19,15 +29,8 @@ async def alfred(ctx):
 # Gets the current url(s) of the ngrok tunnel
 @alfred.command()
 async def ip(ctx):
-    async with aiohttp.ClientSession() as session:
-        try:
-            async with session.get("http://localhost:4040/api/tunnels") as r:
-                js = await r.json()
-                tunnels = [urlparse(tunnel["public_url"]).netloc for tunnel in js["tunnels"]]
-                await ctx.send(*tunnels)
-        except aiohttp.ClientConnectorError as e:
-            await ctx.send(f"Connection error. This usually means ngrok isn't running.\n{str(e)}")
-            
+    await ctx.send(await get_ngrok_ip())
+
 # Sends a dm to the user
 @alfred.command()
 async def dm(ctx, user: discord.User, *, message=None):
