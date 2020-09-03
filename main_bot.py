@@ -12,7 +12,7 @@ async def get_ngrok_ip():
             async with session.get("http://localhost:4040/api/tunnels") as r:
                 js = await r.json()
                 tunnels = [urlparse(tunnel["public_url"]).netloc for tunnel in js["tunnels"]]
-                return *tunnels
+                return tunnels
         except aiohttp.ClientConnectorError as e:
             return f"Connection error. This usually means ngrok isn't running.\n{str(e)}"
 
@@ -29,7 +29,8 @@ async def alfred(ctx):
 # Gets the current url(s) of the ngrok tunnel
 @alfred.command()
 async def ip(ctx):
-    await ctx.send(await get_ngrok_ip())
+    ip = await get_ngrok_ip()
+    await ctx.send(*ip)
 
 # Sends a dm to the user
 @alfred.command()
