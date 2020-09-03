@@ -27,5 +27,11 @@ async def ip(ctx):
                 await ctx.send(*tunnels)
         except aiohttp.ClientConnectorError as e:
             await ctx.send(f"Connection error. This usually means ngrok isn't running.\n{str(e)}")
+            
+# Sends a dm to the user
+@alfred.command()
+async def dm(ctx, user: discord.User, *, message=None):
+    message = message or "This is a default DM message, as none was specified!"
+    await user.send(message)
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
