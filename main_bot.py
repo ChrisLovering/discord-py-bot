@@ -12,7 +12,7 @@ async def on_ready():
 
 @bot.group()
 async def alfred(ctx):
-    print(f"{ctx.author} sent {ctx.message.content} in {ctx.channel}")
+    print(f"{ctx}\n{ctx.author} ()sent {ctx.message.content} in {ctx.channel}")
     if ctx.invoked_subcommand is None:
         await ctx.send("Invalid alfred command passed...")
 
