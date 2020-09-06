@@ -40,7 +40,7 @@ async def ip(ctx):
 @alfred.command()
 async def dm(ctx, user: discord.User, *, message=None):
     if message and message.lower().startswith('ip'):
-        message = ' '.join([await get_ngrok_ip(), message])
+        message = ' '.join([await get_ngrok_ip(), message[2:].lstrip()])
     else:
         message = message or "This is a default DM message, as none was specified!"
     await user.send(message)
