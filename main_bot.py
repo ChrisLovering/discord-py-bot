@@ -22,8 +22,9 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    print(f"{message.author} sent '{message.content}' in {message.channel}")
-    await bot.process_commands(message)
+    if message.author != bot.user:
+        print(f"{message.author} sent '{message.content}' in {message.channel}")
+        await bot.process_commands(message)
 
 @bot.group()
 async def alfred(ctx):
