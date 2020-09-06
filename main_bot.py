@@ -21,8 +21,8 @@ async def on_ready():
     print(f"We have logged in as {bot.user}")
 
 @bot.event
-async def on_message(ctx):
-    print(f"{ctx.author} sent '{ctx.message.content}' in {ctx.channel}")
+async def on_message(message):
+    print(f"{message.author} sent '{message.content}' in {message.channel}")
     await bot.process_commands(message)
 
 @bot.group()
