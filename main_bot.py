@@ -20,9 +20,13 @@ async def get_ngrok_ip():
 async def on_ready():
     print(f"We have logged in as {bot.user}")
 
+@bot.event
+async def on_message(ctx):
+    print(f"{ctx.author} sent '{ctx.message.content}' in {ctx.channel}")
+    await bot.process_commands(message)
+
 @bot.group()
 async def alfred(ctx):
-    print(f"{ctx.author} sent {ctx.message.content} in {ctx.channel}")
     if ctx.invoked_subcommand is None:
         await ctx.send("Invalid alfred command passed...")
 
