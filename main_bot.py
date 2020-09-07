@@ -34,7 +34,11 @@ async def alfred(ctx):
 
 @alfred.command()
 async def say(ctx, *, message='test'):
-    google_home.play_tts(message)
+    slow = False
+    if message.lower().startswith('slow'):
+        slow = True
+        message = message[4:].lstrip()
+    google_home.play_tts(message, slow=slow)
     await ctx.send(f'Now playing {message}')
 
 # Gets the current url(s) of the ngrok tunnel
