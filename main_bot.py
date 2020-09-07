@@ -5,7 +5,8 @@ from discord.ext import commands
 from urllib.parse import urlparse
 import google_home
 
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix="!", help_command=None)
+debug = False
 
 async def get_ngrok_ip():
     async with aiohttp.ClientSession() as session:
@@ -23,23 +24,15 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    if message.author != bot.user:
+    if debug and message.author != bot.user:
         print(f"{message.author} sent '{message.content}' in {message.channel}")
-        await bot.process_commands(message)
+    await bot.process_commands(message)
 
+# Top level command, this is so that this bot doesn't overlap with others that use !
 @bot.group()
 async def alfred(ctx):
     if ctx.invoked_subcommand is None:
         await ctx.send("Invalid alfred command passed...")
-
-@alfred.command()
-async def say(ctx, *, message='test'):
-    slow = False
-    if message.lower().startswith('slow'):
-        slow = True
-        message = message[4:].lstrip()
-    google_home.play_tts(message, slow=slow)
-    await ctx.send(f'Now playing {message}')
 
 # Gets the current url(s) of the ngrok tunnel
 @alfred.command()
@@ -47,13 +40,27 @@ async def ip(ctx):
     ip = await get_ngrok_ip()
     await ctx.send(ip)
 
+@alfred.group()
+async def say(ctx, *, message='test'):
+    if ctx.invoked_subcommand is None:
+        google_home.play_tts(message)
+        await ctx.send(f'Now playing {message}')
+
+@say.command(name='slow')
+async def say_slow(ctx, *, message='test'):
+    google_home.play_tts(message, slow=True)
+    await ctx.send(f'Now playing {message}')
+
 # Sends a dm to the user
-@alfred.command()
+@alfred.group()
 async def dm(ctx, user: discord.User, *, message=None):
-    if message and message.lower().startswith('ip'):
-        message = ' '.join([await get_ngrok_ip(), message[2:].lstrip()])
-    else:
+    if ctx.invoked_subcommand is None:
         message = message or "This is a default DM message, as none was specified!"
+        await user.send(message)
+
+@dm.command(name='ip')
+async def dm_ip(ctx, user: discord.User, *, message=None):
+    message = ' '.join([await get_ngrok_ip(), message])
     await user.send(message)
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
