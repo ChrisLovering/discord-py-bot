@@ -67,7 +67,8 @@ async def lang_list(ctx):
     home_obj.languages = home_obj.languages
     languages_list = [f'{code}: {lang}' for code, lang in home_obj.languages.items()]
     await ctx.author.send('\n'.join(['Supported languages are:']+languages_list))
-    await ctx.send("DM'd you the list as its quite long")
+    if not isinstance(ctx.channel, discord.channel.DMChannel):
+        await ctx.send("DM'd you the list as its quite long")
 
 @lang.command(name='get')
 async def lang_get(ctx):
