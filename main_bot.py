@@ -33,7 +33,7 @@ async def alfred(ctx):
         await ctx.send("Invalid alfred command passed...")
 
 @alfred.command()
-async def play(ctx, *, message='test'):
+async def say(ctx, *, message='test'):
     google_home.play_tts(message)
     await ctx.send(f'Now playing {message}')
 
