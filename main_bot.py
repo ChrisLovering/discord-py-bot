@@ -3,6 +3,7 @@ import aiohttp
 import discord
 from discord.ext import commands
 from urllib.parse import urlparse
+import google_home
 
 bot = commands.Bot(command_prefix="!")
 
@@ -30,6 +31,11 @@ async def on_message(message):
 async def alfred(ctx):
     if ctx.invoked_subcommand is None:
         await ctx.send("Invalid alfred command passed...")
+
+@alfred.command()
+async def play(ctx, *, message='test'):
+    google_home.play_tts(message)
+    await ctx.send(f'Now playing {message}')
 
 # Gets the current url(s) of the ngrok tunnel
 @alfred.command()
