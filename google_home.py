@@ -23,7 +23,6 @@ def get_ip():
         IP = '127.0.0.1'
     finally:
         s.close()
-    print(IP)
     return IP
 
 def play_tts(text, lang='en', slow=False):
@@ -38,7 +37,6 @@ def play_tts(text, lang='en', slow=False):
 
 
 def play_mp3(mp3_url):
-    print(mp3_url)
     cast.wait()
     mc = cast.media_controller
     mc.play_media(mp3_url, 'audio/mp3')
