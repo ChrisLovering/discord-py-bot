@@ -7,6 +7,7 @@ from discord.ext import commands
 from urllib.parse import urlparse
 from google_home import GoogleHome
 
+
 dirname = Path(__file__).parent.absolute()
 pickle_file = Path(dirname, 'user_langs.pkl')
 if pickle_file.is_file():
@@ -18,6 +19,12 @@ else:
 bot = commands.Bot(command_prefix="!", help_command=None)
 debug = False
 home_obj = GoogleHome()
+
+async def check_server():
+    if await home_obj.test_server():
+        return True
+    else:
+        return 'The text to speech server is currently offline. Cancelling your request.'
 
 async def get_ngrok_ip():
     async with aiohttp.ClientSession() as session:
@@ -87,12 +94,18 @@ async def lang_set(ctx, lang):
 @alfred.group()
 async def say(ctx, *, message='test'):
     if ctx.invoked_subcommand is None:
+        if (response := await check_server()) != True:
+            await ctx.send(response)
+            return
         lang = user_langs.get(ctx.author.id, "en")
         home_obj.play_tts(message, lang=lang)
         await ctx.send(f'Now playing {message} in {home_obj.languages[lang]}')
 
 @say.command(name='slow')
 async def say_slow(ctx, *, message='test'):
+    if (response := await check_server()) != True:
+        await ctx.send(response)
+        return
     lang = user_langs.get(ctx.author.id, "en")
     home_obj.play_tts(message, lang=lang, slow=True)
     await ctx.send(f'Now playing {message} slowly, in {home_obj.languages[lang]}')

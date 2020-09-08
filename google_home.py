@@ -2,8 +2,8 @@ import pychromecast
 from gtts import gTTS, lang
 from slugify import slugify
 from pathlib import Path
-from urllib.parse import urlparse
 import socket
+import aiohttp
 
 class GoogleHome():
     
@@ -29,6 +29,18 @@ class GoogleHome():
             s.close()
         return IP
 
+    @classmethod
+    async def test_server(cls):
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(f'http://{cls.get_ip()}:5000/test/') as r:
+                    js = await r.json()
+                    if js.get('detail', None):
+                        return True
+                    return False
+            except aiohttp.ClientConnectorError:
+                return False
+        
     @staticmethod
     def get_langs():
         return lang.tts_langs()
