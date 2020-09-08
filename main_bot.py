@@ -94,8 +94,9 @@ async def lang_set(ctx, lang):
 @alfred.group()
 async def say(ctx, *, message='test'):
     if ctx.invoked_subcommand is None:
-        if (response := await check_server()) != True:
-            await ctx.send(response)
+        res = await check_server()
+        if res != True:
+            await ctx.send(res)
             return
         lang = user_langs.get(ctx.author.id, "en")
         home_obj.play_tts(message, lang=lang)
