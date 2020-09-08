@@ -18,12 +18,12 @@ class GoogleHome():
 
     @staticmethod
     def get_ip():
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            try:
                 s.connect(('10.255.255.255', 1))
                 IP = s.getsockname()[0]
-        except Exception:
-            IP = '127.0.0.1'
+            except Exception:
+                IP = '127.0.0.1'
         return IP
 
     @classmethod
