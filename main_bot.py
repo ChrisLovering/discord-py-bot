@@ -104,8 +104,9 @@ async def say(ctx, *, message='test'):
 
 @say.command(name='slow')
 async def say_slow(ctx, *, message='test'):
-    if (response := await check_server()) != True:
-        await ctx.send(response)
+    res = await check_server()
+    if res != True:
+        await ctx.send(res)
         return
     lang = user_langs.get(ctx.author.id, "en")
     home_obj.play_tts(message, lang=lang, slow=True)
