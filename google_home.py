@@ -1,3 +1,5 @@
+#TODO implement https://github.com/MagicStack/asyncpg for caching files
+
 import pychromecast
 from gtts import gTTS, lang
 from slugify import slugify
