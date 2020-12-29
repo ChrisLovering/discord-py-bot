@@ -40,11 +40,10 @@ async def get_ngrok_ip():
 async def on_ready():
     print(f"We have logged in as {bot.user}")
 
-@bot.event
+@bot.listen('on_message')
 async def on_message(message):
     if debug and message.author != bot.user:
         print(f"{message.author} sent '{message.content}' in {message.channel}")
-    await bot.process_commands(message)
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -120,7 +119,7 @@ async def dm(ctx, user: discord.User, *, message=None):
         await user.send(message)
 
 @dm.command(name='ip')
-async def dm_ip(ctx, user: discord.User, *, message=None):
+async def dm_ip(_, user: discord.User, *, message=None):
     message = ' '.join([await get_ngrok_ip(), message])
     await user.send(message)
 
