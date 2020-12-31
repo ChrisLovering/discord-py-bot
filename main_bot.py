@@ -1,4 +1,4 @@
-import os
+import json
 import aiohttp
 import discord
 import pickle
@@ -123,7 +123,9 @@ async def dm_ip(_, user: discord.User, *, message=None):
     message = ' '.join([await get_ngrok_ip(), message])
     await user.send(message)
 
+with open('creds.json') as f:
+    data = json.load(f)
 
-bot.run(os.environ["DISCORD_BOT_TOKEN"])
+bot.run(data['api_token'])
 with open(pickle_file, 'wb') as f:
     pickle.dump(user_langs, f)
