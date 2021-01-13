@@ -1,4 +1,4 @@
-#TODO implement https://github.com/MagicStack/asyncpg for caching files
+# TODO implement https://github.com/MagicStack/asyncpg for caching files
 
 import pychromecast
 from gtts import gTTS, lang
@@ -7,8 +7,9 @@ from pathlib import Path
 import socket
 import aiohttp
 
+
 class GoogleHome():
-    
+
     def __init__(self):
         self.chromecast_name = "Living Room speaker"
         self.languages = self.get_langs()
@@ -39,7 +40,7 @@ class GoogleHome():
                     return False
             except aiohttp.ClientConnectorError:
                 return False
-        
+
     @staticmethod
     def get_langs():
         return lang.tts_langs()
@@ -51,15 +52,15 @@ class GoogleHome():
         if not tts_file.is_file():
             tts.save(tts_file)
 
-        mp3_url = "http://" + self.get_ip() + ':5000/static/cache/' + filename 
+        mp3_url = "http://" + self.get_ip() + ':5000/static/cache/' + filename
         self.play_mp3(mp3_url)
-
 
     def play_mp3(self, mp3_url):
         self.cast.wait()
         mc = self.cast.media_controller
         mc.play_media(mp3_url, 'audio/mp3')
         mc.block_until_active()
+
 
 if __name__ == "__main__":
     print(GoogleHome.get_langs())
